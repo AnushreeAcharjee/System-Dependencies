@@ -2,7 +2,6 @@ package com.apple.model;
 
 import com.apple.algorithm.Graph;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

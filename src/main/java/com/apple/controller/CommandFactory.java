@@ -20,7 +20,7 @@ public class CommandFactory {
         // more commands
     }
 
-    public static Optional<Command> getCommand(String operator) {
-        return Optional.ofNullable(commandMap.get(operator));
+    public static Optional<Command> getCommand(String command) {
+        return Optional.ofNullable(commandMap.get(command));
     }
 }
