@@ -1,12 +1,12 @@
 package com.apple;
 
 import com.apple.algorithm.Graph;
-import com.apple.controller.DependencyManagerImpl;
+import com.apple.controller.CommandFactory;
+import com.apple.model.ApplicationContext;
 import com.apple.model.Command;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by anushree on 23 May, 2020
@@ -23,34 +23,18 @@ public class Application {
             br=new BufferedReader(fr);
 
             String line = br.readLine();
-            DependencyManagerImpl dependencyManager = new DependencyManagerImpl();
+            ApplicationContext applicationContext = new ApplicationContext(new ArrayList<>(), new Graph());
             while(line != null)
             {
+                System.out.println(line);
                 String[] toks = line.split("\\s+");
                 String command = toks[0];
-                int length = toks.length;
-                if(command.equalsIgnoreCase(Command.DEPEND.name())){
-                    String source = toks[1];
-                    List<String> dependencies = new ArrayList<>();
-                    for(int i = 2; i < length; i++){
-                        dependencies.add(toks[i]);
-                    }
-                    dependencyManager.addDependency(source, dependencies);
-                    System.out.println(line);
-                }else if(command.equalsIgnoreCase(Command.INSTALL.name())){
-                    System.out.println(line);
-                    dependencyManager.installComponent(toks[1]);
-                }else if(command.equalsIgnoreCase(Command.LIST.name())){
-                    System.out.println(line);
-                    dependencyManager.listInstalledComponents();
-                }else if(command.equalsIgnoreCase(Command.REMOVE.name())){
-                    System.out.println(line);
-                    dependencyManager.removeComponent(toks[1]);
-                }else if(command.equalsIgnoreCase(Command.END.name())){
-                    System.out.println(line);
-                }else{
-                    System.out.println("Invalid command");
-                }
+
+                Command targetOperation = CommandFactory
+                        .getCommand(command.toLowerCase())
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid Command"));
+                targetOperation.apply(applicationContext, line);
+
                 line = br.readLine();
             }
         } catch (FileNotFoundException e) {
